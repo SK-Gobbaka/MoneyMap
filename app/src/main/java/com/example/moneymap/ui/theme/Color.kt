@@ -1,0 +1,38 @@
+package com.example.moneymap.ui.theme
+
+import androidx.compose.ui.graphics.Color
+
+// MoneyMap export (tailwind / design reference)
+val Indigo600 = Color(0xFF4F46E5)
+val Indigo200 = Color(0xFFC7D2FE)
+val Indigo700 = Color(0xFF4338CA)
+val Indigo900 = Color(0xFF312E81)
+val Gray50 = Color(0xFFF9FAFB)
+val Gray100 = Color(0xFFF3F4F6)
+val Gray200 = Color(0xFFE5E7EB)
+val Gray400 = Color(0xFF9CA3AF)
+val Gray500 = Color(0xFF6B7280)
+val Gray600 = Color(0xFF4B5563)
+val Gray900 = Color(0xFF111827)
+val Emerald300 = Color(0xFF6EE7B7)
+val Emerald600 = Color(0xFF059669)
+val Emerald50 = Color(0xFFECFDF5)
+val Emerald100 = Color(0xFFD1FAE5)
+val Red50 = Color(0xFFFEF2F2)
+val Red300 = Color(0xFFFCA5A5)
+val Red500 = Color(0xFFEF4444)
+val White = Color(0xFFFFFFFF)
+
+// Charts (analytics export)
+val ChartIndigo = Color(0xFF4F46E5)
+val ChartEmerald = Color(0xFF10B981)
+val ChartAmber = Color(0xFFF59E0B)
+val ChartRed = Color(0xFFEF4444)
+val ChartViolet = Color(0xFF8B5CF6)
+val ChartCyan = Color(0xFF06B6D4)
+val ChartPink = Color(0xFFEC4899)
+
+// Dark (approx. design export)
+internal val DarkBg = Color(0xFF121212)
+internal val DarkSurface = Color(0xFF1E1E1E)
+internal val DarkOnSurface = Color(0xFFF3F4F6)
