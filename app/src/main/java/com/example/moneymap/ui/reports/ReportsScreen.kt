@@ -44,7 +44,6 @@ import com.example.moneymap.ui.theme.ChartIndigo
 import com.example.moneymap.ui.theme.ChartPink
 import com.example.moneymap.ui.theme.ChartRed
 import com.example.moneymap.ui.theme.ChartViolet
-import com.example.moneymap.ui.theme.Gray100
 import com.example.moneymap.ui.theme.Gray400
 import com.example.moneymap.ui.theme.Gray500
 import com.example.moneymap.ui.theme.Indigo600
@@ -105,7 +104,7 @@ fun ReportsScreen(viewModel: ReportsViewModel) {
             Surface(
                 shape = RoundedCornerShape(28.dp),
                 color = MaterialTheme.colorScheme.surface,
-                border = BorderStroke(1.dp, Gray100),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
                 shadowElevation = 1.dp,
             ) {
                 Column(Modifier.padding(24.dp)) {
@@ -194,7 +193,7 @@ fun ReportsScreen(viewModel: ReportsViewModel) {
             Surface(
                 shape = RoundedCornerShape(28.dp),
                 color = MaterialTheme.colorScheme.surface,
-                border = BorderStroke(1.dp, Gray100),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
                 shadowElevation = 1.dp,
             ) {
                 Column(Modifier.padding(24.dp)) {
@@ -213,12 +212,12 @@ fun ReportsScreen(viewModel: ReportsViewModel) {
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(Red50)
+                                .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f))
                                 .padding(horizontal = 10.dp, vertical = 6.dp),
                         ) {
-                            Icon(Icons.Default.TrendingUp, contentDescription = null, tint = Red500, modifier = Modifier.size(16.dp))
+                            Icon(Icons.Default.TrendingUp, contentDescription = null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(16.dp))
                             Spacer(Modifier.size(4.dp))
-                            Text("High", color = Red500, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                            Text("High", color = MaterialTheme.colorScheme.error, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
                         }
                     }
                     Spacer(Modifier.height(16.dp))

@@ -26,6 +26,7 @@ import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material.icons.outlined.Logout
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +37,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,6 +75,45 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
         ThemeMode.DARK -> true
     }
 
+    var securityDialogVisible by remember { mutableStateOf(false) }
+    var privacyDialogVisible by remember { mutableStateOf(false) }
+
+    if (securityDialogVisible) {
+        AlertDialog(
+            onDismissRequest = { securityDialogVisible = false },
+            title = { Text("Security Settings") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text("• Biometric Lock: Enhanced security using your fingerprint or face ID.")
+                    Text("• Two-Factor Authentication: Add an extra layer of security to your account.")
+                    Text("• Device Management: View and manage all devices currently logged into your account.")
+                    Text("• Pin Code: Set a secondary PIN for accessing sensitive financial data.")
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { securityDialogVisible = false }) { Text("Close") }
+            }
+        )
+    }
+
+    if (privacyDialogVisible) {
+        AlertDialog(
+            onDismissRequest = { privacyDialogVisible = false },
+            title = { Text("Data & Privacy") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text("• Data Encryption: Your financial records are encrypted with AES-256 standard.")
+                    Text("• Local-First: Most of your data stays on your device and is never shared with third parties.")
+                    Text("• Data Export: Download a copy of your transaction history at any time in CSV format.")
+                    Text("• Account Deletion: You can permanently delete your account and all associated data.")
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { privacyDialogVisible = false }) { Text("Close") }
+            }
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -86,10 +129,10 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                 "Settings",
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp,
-                color = Gray900,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .border(1.dp, Gray50.copy(alpha = 0.5f))
+                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
                     .padding(horizontal = 24.dp)
                     .statusBarsPadding()
                     .padding(top = 8.dp, bottom = 14.dp),
@@ -100,7 +143,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
             Surface(
                 shape = RoundedCornerShape(26.dp),
                 color = MaterialTheme.colorScheme.surface,
-                border = androidx.compose.foundation.BorderStroke(1.dp, Gray100),
+                border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
                 shadowElevation = 1.dp,
             ) {
                 Row(
@@ -114,7 +157,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                         modifier = Modifier
                             .size(64.dp)
                             .clip(CircleShape)
-                            .background(Gray100),
+                            .background(MaterialTheme.colorScheme.surfaceVariant),
                     ) {
                         AsyncImage(
                             model = ImageRequest.Builder(ctx)
@@ -127,17 +170,17 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                         )
                     }
                     Column(Modifier.weight(1f).padding(horizontal = 14.dp)) {
-                        Text("Alex Carter", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Gray900)
+                        Text("Alex Carter", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurface)
                         Text("alex.carter@example.com", fontSize = 14.sp, color = Gray500, fontWeight = FontWeight.Medium)
                     }
                     Box(
                         modifier = Modifier
                             .size(40.dp)
                             .clip(CircleShape)
-                            .background(Gray100),
+                            .background(MaterialTheme.colorScheme.surfaceVariant),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Icon(Icons.Outlined.Person, contentDescription = null, tint = Gray900)
+                        Icon(Icons.Outlined.Person, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface)
                     }
                 }
             }
@@ -145,11 +188,6 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
             Spacer(Modifier.height(28.dp))
             SettingsSectionTitle("PREFERENCES")
             SettingsCard {
-                SettingsRow(
-                    icon = { Icon(Icons.Outlined.Notifications, contentDescription = null, tint = Gray500) },
-                    label = "Notifications",
-                )
-                HorizontalDivider(color = Gray50, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
                 Row(
                     Modifier
                         .fillMaxWidth()
@@ -165,13 +203,13 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(14.dp))
-                                .background(Gray100)
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
                                 .padding(10.dp),
                         ) {
                             Icon(Icons.Outlined.DarkMode, contentDescription = null, tint = Gray500)
                         }
                         Spacer(Modifier.size(12.dp))
-                        Text("Dark Mode", fontWeight = FontWeight.SemiBold, color = Gray900, fontSize = 15.sp)
+                        Text("Dark Mode", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface, fontSize = 15.sp)
                     }
                     Switch(
                         checked = effectiveDark,
@@ -180,7 +218,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                         },
                         colors = SwitchDefaults.colors(
                             checkedThumbColor = MaterialTheme.colorScheme.surface,
-                            checkedTrackColor = Indigo600,
+                            checkedTrackColor = MaterialTheme.colorScheme.primary,
                         ),
                     )
                 }
@@ -192,11 +230,13 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                 SettingsRow(
                     icon = { Icon(Icons.Outlined.Security, contentDescription = null, tint = Gray500) },
                     label = "Security Settings",
+                    onClick = { securityDialogVisible = true }
                 )
-                HorizontalDivider(color = Gray50, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
                 SettingsRow(
                     icon = { Icon(Icons.Outlined.Person, contentDescription = null, tint = Gray500) },
                     label = "Data & Privacy",
+                    onClick = { privacyDialogVisible = true }
                 )
             }
 
@@ -212,7 +252,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
             Spacer(Modifier.height(28.dp))
             Surface(
                 shape = RoundedCornerShape(18.dp),
-                color = Red50,
+                color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f),
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {},
@@ -224,9 +264,9 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(Icons.Outlined.Logout, contentDescription = null, tint = Red500)
+                    Icon(Icons.Outlined.Logout, contentDescription = null, tint = MaterialTheme.colorScheme.error)
                     Spacer(Modifier.size(10.dp))
-                    Text("Log Out", color = Red500, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text("Log Out", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 }
             }
 
@@ -240,7 +280,7 @@ private fun SettingsSectionTitle(text: String) {
     Text(
         text,
         fontWeight = FontWeight.Bold,
-        color = Gray400,
+        color = MaterialTheme.colorScheme.primary,
         fontSize = 11.sp,
         letterSpacing = 1.8.sp,
         modifier = Modifier.padding(start = 8.dp, bottom = 10.dp),
@@ -252,7 +292,7 @@ private fun SettingsCard(content: @Composable () -> Unit) {
     Surface(
         shape = RoundedCornerShape(22.dp),
         color = MaterialTheme.colorScheme.surface,
-        border = androidx.compose.foundation.BorderStroke(1.dp, Gray100),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         shadowElevation = 1.dp,
     ) {
         Column { content() }
@@ -263,9 +303,10 @@ private fun SettingsCard(content: @Composable () -> Unit) {
 private fun SettingsRow(
     icon: @Composable () -> Unit,
     label: String,
+    onClick: () -> Unit = {},
 ) {
     TextButton(
-        onClick = {},
+        onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
     ) {
         Row(
@@ -275,7 +316,7 @@ private fun SettingsRow(
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(14.dp))
-                    .background(Gray100)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
                     .padding(10.dp),
             ) {
                 icon()
@@ -283,7 +324,7 @@ private fun SettingsRow(
             Text(
                 label,
                 fontWeight = FontWeight.SemiBold,
-                color = Gray900,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 15.sp,
                 modifier = Modifier
                     .weight(1f)

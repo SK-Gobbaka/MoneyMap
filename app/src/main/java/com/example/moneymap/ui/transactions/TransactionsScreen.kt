@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.NorthEast
@@ -60,7 +61,6 @@ import com.example.moneymap.ui.theme.Gray900
 import com.example.moneymap.ui.theme.Indigo600
 import com.example.moneymap.ui.theme.Red50
 import com.example.moneymap.ui.theme.Red500
-import com.example.moneymap.ui.theme.White
 import com.example.moneymap.util.MoneyFormat
 import java.time.format.DateTimeFormatter
 import androidx.compose.foundation.BorderStroke
@@ -103,7 +103,7 @@ fun TransactionsScreen(
                     "Activity",
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp,
-                    color = Gray900,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
                 Spacer(Modifier.height(16.dp))
                 OutlinedTextField(
@@ -172,20 +172,16 @@ fun TransactionsScreen(
                 Spacer(Modifier.height(12.dp))
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(bottom = 8.dp)
                 ) {
                     FilterChip(
                         selected = state.typeFilter == TransactionTypeFilter.ALL,
                         onClick = { viewModel.setTypeFilter(TransactionTypeFilter.ALL) },
                         label = { Text("All") },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Gray900,
-                            selectedLabelColor = White,
-                        ),
-                        border = FilterChipDefaults.filterChipBorder(
-                            borderColor = Gray100,
-                            selectedBorderColor = Gray900,
-                            enabled = true,
-                            selected = state.typeFilter == TransactionTypeFilter.ALL
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
                         )
                     )
                     FilterChip(
@@ -193,14 +189,8 @@ fun TransactionsScreen(
                         onClick = { viewModel.setTypeFilter(TransactionTypeFilter.INCOME) },
                         label = { Text("Income") },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Gray900,
-                            selectedLabelColor = White,
-                        ),
-                        border = FilterChipDefaults.filterChipBorder(
-                            borderColor = Gray100,
-                            selectedBorderColor = Gray900,
-                            enabled = true,
-                            selected = state.typeFilter == TransactionTypeFilter.INCOME
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
                         )
                     )
                     FilterChip(
@@ -208,16 +198,56 @@ fun TransactionsScreen(
                         onClick = { viewModel.setTypeFilter(TransactionTypeFilter.EXPENSE) },
                         label = { Text("Expense") },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Gray900,
-                            selectedLabelColor = White,
-                        ),
-                        border = FilterChipDefaults.filterChipBorder(
-                            borderColor = Gray100,
-                            selectedBorderColor = Gray900,
-                            enabled = true,
-                            selected = state.typeFilter == TransactionTypeFilter.EXPENSE
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
                         )
                     )
+                }
+
+                var categoryMenuExpanded by remember { mutableStateOf(false) }
+                val categories = remember {
+                    com.example.moneymap.data.CategoryCatalog.expenseCategories.map { it.name } +
+                            com.example.moneymap.data.CategoryCatalog.incomeCategoryName
+                }
+
+                Box {
+                    FilterChip(
+                        selected = state.categoryFilter != null,
+                        onClick = { categoryMenuExpanded = true },
+                        label = { Text(state.categoryFilter ?: "All Categories") },
+                        trailingIcon = {
+                            Icon(
+                                Icons.Default.ArrowDropDown,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            selectedLabelColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        )
+                    )
+                    DropdownMenu(
+                        expanded = categoryMenuExpanded,
+                        onDismissRequest = { categoryMenuExpanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("All Categories") },
+                            onClick = {
+                                viewModel.setCategoryFilter(null)
+                                categoryMenuExpanded = false
+                            }
+                        )
+                        categories.forEach { cat ->
+                            DropdownMenuItem(
+                                text = { Text(cat) },
+                                onClick = {
+                                    viewModel.setCategoryFilter(cat)
+                                    categoryMenuExpanded = false
+                                }
+                            )
+                        }
+                    }
                 }
                 Spacer(Modifier.height(16.dp))
             }
@@ -247,7 +277,7 @@ fun TransactionsScreen(
                             Icon(Icons.Outlined.Search, contentDescription = null, tint = Gray400)
                         }
                         Spacer(Modifier.height(14.dp))
-                        Text("No transactions found", fontWeight = FontWeight.SemiBold, color = Gray900)
+                        Text("No transactions found", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
                         Spacer(Modifier.height(4.dp))
                         Text("Try changing your filters or search term.", fontSize = 14.sp, color = Gray500)
                     }
@@ -341,7 +371,7 @@ private fun ActivityTxRow(
                 }
             }
             Column(modifier = Modifier.weight(1f).padding(start = 12.dp)) {
-                Text(title, fontWeight = FontWeight.SemiBold, color = Gray900, maxLines = 1)
+                Text(title, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface, maxLines = 1)
                 if (record.notes.isNotBlank()) {
                     Text(
                         record.notes,
@@ -357,7 +387,7 @@ private fun ActivityTxRow(
             Text(
                 text = if (isIncome) "+$amt" else "−$amt",
                 fontWeight = FontWeight.Bold,
-                color = if (isIncome) Emerald600 else Gray900,
+                color = if (isIncome) Emerald600 else MaterialTheme.colorScheme.onSurface,
             )
             TextButton(onClick = onDelete, modifier = Modifier.padding(start = 4.dp)) {
                 Text("Delete", color = Red500, fontWeight = FontWeight.SemiBold, fontSize = 12.sp)

@@ -26,6 +26,7 @@ import androidx.compose.material.icons.outlined.AccountBalanceWallet
 import androidx.compose.material.icons.outlined.NorthEast
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.SouthEast
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +35,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -77,13 +81,32 @@ fun DashboardScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val today = LocalDate.now()
+    var showNotifications by remember { mutableStateOf(false) }
+
+    if (showNotifications) {
+        AlertDialog(
+            onDismissRequest = { showNotifications = false },
+            title = { Text("Notifications") },
+            text = { Text("You have no new notifications.") },
+            confirmButton = {
+                TextButton(onClick = { showNotifications = false }) {
+                    Text("OK")
+                }
+            }
+        )
+    }
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
     ) {
-        item { DashboardHeader(Modifier.fillMaxWidth()) }
+        item {
+            DashboardHeader(
+                onNotificationClick = { showNotifications = true },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
         item {
             Column(Modifier.padding(horizontal = 24.dp)) {
                 Spacer(Modifier.height(16.dp))
@@ -115,7 +138,7 @@ fun DashboardScreen(
                     color = MaterialTheme.colorScheme.surface,
                     tonalElevation = 0.dp,
                     shadowElevation = 1.dp,
-                    border = BorderStroke(1.dp, Gray100),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
                 ) {
                     if (state.recent.isEmpty()) {
                         Text(
@@ -144,7 +167,10 @@ fun DashboardScreen(
 }
 
 @Composable
-private fun DashboardHeader(modifier: Modifier = Modifier) {
+private fun DashboardHeader(
+    onNotificationClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Surface(
         modifier = modifier,
         color = MaterialTheme.colorScheme.surface,
@@ -167,7 +193,7 @@ private fun DashboardHeader(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape)
-                        .background(Gray100),
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
                 ) {
                     AsyncImage(
                         model = ImageRequest.Builder(ctx)
@@ -199,13 +225,14 @@ private fun DashboardHeader(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .border(1.dp, Gray100, CircleShape),
+                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
+                    .clickable(onClick = onNotificationClick),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     Icons.Outlined.Notifications,
                     contentDescription = null,
-                    tint = Gray900.copy(alpha = 0.62f),
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.62f),
                 )
                 Box(
                     modifier = Modifier
@@ -214,7 +241,7 @@ private fun DashboardHeader(modifier: Modifier = Modifier) {
                         .size(9.dp)
                         .clip(CircleShape)
                         .background(Red500)
-                        .border(2.dp, White, CircleShape),
+                        .border(2.dp, MaterialTheme.colorScheme.surface, CircleShape),
                 )
             }
         }
@@ -466,7 +493,7 @@ private fun RecentActivityRow(
             )
         }
         if (showDivider) {
-            HorizontalDivider(color = Color(0xFFF9FAFB))
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f))
         }
     }
 }

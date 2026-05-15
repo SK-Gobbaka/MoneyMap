@@ -98,14 +98,14 @@ fun AddTransactionScreen(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back",
-                    tint = Gray900,
+                    tint = MaterialTheme.colorScheme.onSurface,
                 )
             }
             Text(
                 if (isEdit) "Edit Transaction" else "New Transaction",
                 fontSize = if (isEdit) 22.sp else 26.sp,
                 fontWeight = FontWeight.Bold,
-                color = Gray900,
+                color = MaterialTheme.colorScheme.onSurface,
             )
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
