@@ -171,9 +171,9 @@ fun AnalyticsDonutChart(
             PieChart(ctx).apply {
                 description.isEnabled = false
                 isDrawHoleEnabled = drawHole
-                setHoleRadius(58f)
-                setTransparentCircleRadius(61f)
-                setHoleColor(AndroidColor.WHITE)
+                setHoleRadius(68f)
+                setTransparentCircleRadius(72f)
+                setHoleColor(AndroidColor.TRANSPARENT)
                 setDrawEntryLabels(showEntryLabels)
                 legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
                 legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
@@ -181,6 +181,7 @@ fun AnalyticsDonutChart(
                 legend.isWordWrapEnabled = true
                 setUsePercentValues(false)
                 setDrawCenterText(false)
+                setBackgroundColor(AndroidColor.TRANSPARENT)
             }
         },
         update = { chart ->

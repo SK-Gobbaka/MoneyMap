@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -46,7 +47,6 @@ import com.example.moneymap.ui.theme.ChartViolet
 import com.example.moneymap.ui.theme.Gray100
 import com.example.moneymap.ui.theme.Gray400
 import com.example.moneymap.ui.theme.Gray500
-import com.example.moneymap.ui.theme.Gray900
 import com.example.moneymap.ui.theme.Indigo600
 import com.example.moneymap.ui.theme.Red50
 import com.example.moneymap.ui.theme.Red500
@@ -110,12 +110,12 @@ fun ReportsScreen(viewModel: ReportsViewModel) {
             ) {
                 Column(Modifier.padding(24.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.PieChart, contentDescription = null, tint = Gray900)
+                        Icon(Icons.Default.PieChart, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface)
                         Spacer(Modifier.size(10.dp))
                         Text(
                             "Expense Breakdown",
                             fontWeight = FontWeight.Bold,
-                            color = Gray900,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 16.sp,
                         )
                     }
@@ -140,15 +140,17 @@ fun ReportsScreen(viewModel: ReportsViewModel) {
                                 Text(
                                     "TOTAL",
                                     color = Gray400,
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.ExtraBold,
                                     letterSpacing = 1.2.sp,
                                 )
                                 Text(
                                     MoneyFormat.format(state.totalExpense),
-                                    color = Gray900,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 18.sp,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontSize = 16.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                             }
                         }
@@ -174,8 +176,8 @@ fun ReportsScreen(viewModel: ReportsViewModel) {
                                         .background(dotColor),
                                 )
                                 Spacer(Modifier.size(10.dp))
-                                Text(cat.first, fontWeight = FontWeight.SemiBold, color = Gray900, modifier = Modifier.weight(1f))
-                                Text(MoneyFormat.format(cat.second.toDouble()), fontWeight = FontWeight.Bold, color = Gray900)
+                                Text(cat.first, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.weight(1f))
+                                Text(MoneyFormat.format(cat.second.toDouble()), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                                 Spacer(Modifier.size(8.dp))
                                 Text(
                                     "${pct}%",
@@ -204,7 +206,7 @@ fun ReportsScreen(viewModel: ReportsViewModel) {
                         Text(
                             "Spending by Day",
                             fontWeight = FontWeight.Bold,
-                            color = Gray900,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 16.sp,
                         )
                         Row(
