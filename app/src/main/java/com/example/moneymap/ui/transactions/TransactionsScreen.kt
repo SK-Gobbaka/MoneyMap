@@ -18,11 +18,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.NorthEast
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.SouthEast
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -58,6 +64,7 @@ import com.example.moneymap.ui.theme.White
 import com.example.moneymap.util.MoneyFormat
 import java.time.format.DateTimeFormatter
 import androidx.compose.foundation.BorderStroke
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionsScreen(
     viewModel: TransactionsViewModel,
@@ -65,6 +72,7 @@ fun TransactionsScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var pendingDelete by remember { mutableStateOf<TransactionRecord?>(null) }
+    var sortMenuExpanded by remember { mutableStateOf(false) }
 
     val dateHeaderFormat = remember { DateTimeFormatter.ofPattern("EEE, MMM d") }
     val grouped = remember(state.items, dateHeaderFormat) {
@@ -106,8 +114,46 @@ fun TransactionsScreen(
                         Text("Search transactions...", color = Gray400, fontSize = 14.sp)
                     },
                     trailingIcon = {
-                        IconButton(onClick = {}) {
-                            Icon(Icons.Outlined.FilterList, contentDescription = null, tint = Gray400)
+                        Box {
+                            IconButton(onClick = { sortMenuExpanded = true }) {
+                                Icon(
+                                    Icons.Outlined.FilterList,
+                                    contentDescription = "Sort",
+                                    tint = if (state.sort != TransactionSort.LATEST) Indigo600 else Gray400,
+                                )
+                            }
+                            DropdownMenu(
+                                expanded = sortMenuExpanded,
+                                onDismissRequest = { sortMenuExpanded = false },
+                            ) {
+                                TransactionSort.entries.forEach { sortOption ->
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text(
+                                                when (sortOption) {
+                                                    TransactionSort.LATEST -> "Latest First"
+                                                    TransactionSort.OLDEST -> "Oldest First"
+                                                    TransactionSort.HIGHEST -> "Highest Amount"
+                                                    TransactionSort.LOWEST -> "Lowest Amount"
+                                                },
+                                            )
+                                        },
+                                        onClick = {
+                                            viewModel.setSort(sortOption)
+                                            sortMenuExpanded = false
+                                        },
+                                        trailingIcon = {
+                                            if (state.sort == sortOption) {
+                                                Icon(
+                                                    Icons.Default.Check,
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(16.dp),
+                                                )
+                                            }
+                                        },
+                                    )
+                                }
+                            }
                         }
                     },
                     leadingIcon = {
@@ -127,20 +173,50 @@ fun TransactionsScreen(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
-                    ActivityPill(
-                        label = "All",
+                    FilterChip(
                         selected = state.typeFilter == TransactionTypeFilter.ALL,
                         onClick = { viewModel.setTypeFilter(TransactionTypeFilter.ALL) },
+                        label = { Text("All") },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = Gray900,
+                            selectedLabelColor = White,
+                        ),
+                        border = FilterChipDefaults.filterChipBorder(
+                            borderColor = Gray100,
+                            selectedBorderColor = Gray900,
+                            enabled = true,
+                            selected = state.typeFilter == TransactionTypeFilter.ALL
+                        )
                     )
-                    ActivityPill(
-                        label = "Income",
+                    FilterChip(
                         selected = state.typeFilter == TransactionTypeFilter.INCOME,
                         onClick = { viewModel.setTypeFilter(TransactionTypeFilter.INCOME) },
+                        label = { Text("Income") },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = Gray900,
+                            selectedLabelColor = White,
+                        ),
+                        border = FilterChipDefaults.filterChipBorder(
+                            borderColor = Gray100,
+                            selectedBorderColor = Gray900,
+                            enabled = true,
+                            selected = state.typeFilter == TransactionTypeFilter.INCOME
+                        )
                     )
-                    ActivityPill(
-                        label = "Expense",
+                    FilterChip(
                         selected = state.typeFilter == TransactionTypeFilter.EXPENSE,
                         onClick = { viewModel.setTypeFilter(TransactionTypeFilter.EXPENSE) },
+                        label = { Text("Expense") },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = Gray900,
+                            selectedLabelColor = White,
+                        ),
+                        border = FilterChipDefaults.filterChipBorder(
+                            borderColor = Gray100,
+                            selectedBorderColor = Gray900,
+                            enabled = true,
+                            selected = state.typeFilter == TransactionTypeFilter.EXPENSE
+                        )
                     )
                 }
                 Spacer(Modifier.height(16.dp))
@@ -228,28 +304,6 @@ fun TransactionsScreen(
             dismissButton = {
                 TextButton(onClick = { pendingDelete = null }) { Text("Cancel") }
             },
-        )
-    }
-}
-
-@Composable
-private fun ActivityPill(
-    label: String,
-    selected: Boolean,
-    onClick: () -> Unit,
-) {
-    Surface(
-        shape = CircleShape,
-        color = if (selected) Gray900 else Gray100,
-        shadowElevation = if (selected) 3.dp else 0.dp,
-        modifier = Modifier.clickable(onClick = onClick),
-    ) {
-        Text(
-            label,
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            color = if (selected) White else Gray500,
         )
     }
 }
