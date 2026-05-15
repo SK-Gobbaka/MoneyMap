@@ -153,6 +153,7 @@ fun MoneyMapApp(
                     viewModel = vm,
                     isEdit = false,
                     onSaved = { navController.popBackStack() },
+                    onBack = { navController.popBackStack() },
                 )
             }
             composable(Routes.Insights) {
@@ -176,6 +177,7 @@ fun MoneyMapApp(
                     viewModel = vm,
                     isEdit = true,
                     onSaved = { navController.popBackStack() },
+                    onBack = { navController.popBackStack() },
                 )
             }
         }

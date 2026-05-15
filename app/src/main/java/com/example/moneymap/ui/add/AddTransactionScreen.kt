@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -24,6 +26,8 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -57,6 +61,7 @@ fun AddTransactionScreen(
     viewModel: AddTransactionViewModel,
     isEdit: Boolean,
     onSaved: () -> Unit,
+    onBack: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showDatePicker by remember { mutableStateOf(false) }
@@ -83,13 +88,26 @@ fun AddTransactionScreen(
             .padding(horizontal = 22.dp)
             .verticalScroll(rememberScrollState()),
     ) {
-        Text(
-            if (isEdit) "Edit Transaction" else "New Transaction",
-            fontSize = if (isEdit) 22.sp else 26.sp,
-            fontWeight = FontWeight.Bold,
-            color = Gray900,
-            modifier = Modifier.padding(top = 12.dp, bottom = 12.dp),
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+        ) {
+            IconButton(onClick = onBack, modifier = Modifier.padding(end = 8.dp)) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = Gray900,
+                )
+            }
+            Text(
+                if (isEdit) "Edit Transaction" else "New Transaction",
+                fontSize = if (isEdit) 22.sp else 26.sp,
+                fontWeight = FontWeight.Bold,
+                color = Gray900,
+            )
+        }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             FilterChip(
                 selected = state.type == TransactionType.EXPENSE,
